@@ -45,14 +45,14 @@ FakeXpose is a machine learning web application built using Streamlit that detec
 pip install -r requirements.txt
 streamlit run app.py
 
-## 📂 CSV Format for Bulk Upload
+## 📂 '''CSV Format for Bulk Upload'''
 followers,following,posts,has_profile_pic,username_length
 
-## 🌍 Live Demo
+## 🌍 '''Live Demo'''
 
 [https://fakexpose-nurp6bbxn7dc6mdwbxzzmh.streamlit.app/]
 
-## 👨‍💻 Author
+## 👨‍💻 '''Author'''
 
 Arzoo
 Abhinav Vashisth
