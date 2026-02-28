@@ -50,7 +50,7 @@ followers,following,posts,has_profile_pic,username_length
 
 ## 🌍 Live Demo
 
-(Insert your Streamlit deployment link here after deployment)
+[https://fakexpose-nurp6bbxn7dc6mdwbxzzmh.streamlit.app/]
 
 ## 👨‍💻 Author
 
