@@ -79,11 +79,11 @@ if menu == "Single Profile Analysis":
 
             # Risk Indicator
             if confidence < 30:
-                st.info("🟢 Risk Level: Low")
+                st.error("🔴 Risk Level: High")
             elif confidence < 70:
                 st.warning("🟡 Risk Level: Medium")
             else:
-                st.error("🔴 Risk Level: High")
+                st.info("🟢 Risk Level: Low")  
 
 
 elif menu == "Bulk Profile Analysis":
@@ -138,5 +138,6 @@ elif menu == "Bulk Profile Analysis":
         fig, ax = plt.subplots()
         ax.pie(prediction_counts, labels=prediction_counts.index, autopct='%1.1f%%')
         ax.set_title("Fake vs Real Profiles")
+
 
         st.pyplot(fig)
