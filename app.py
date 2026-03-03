@@ -96,49 +96,6 @@ if menu == "Single Profile Analysis":
 
             st.plotly_chart(fig, use_container_width=True)
 
-            # 🧠 Feature Importance Section
-            st.markdown("## 🧠 Model Feature Importance")
-
-            feature_names = [
-                "Followers",
-                "Following",
-                "Posts",
-                "Has Profile Pic",
-                "Username Length",
-                "Followers/Following Ratio"
-            ]
-
-            try:
-                importances = model.feature_importances_
-
-                importance_df = {
-                    "Feature": feature_names,
-                    "Importance": importances
-                }
-
-                import pandas as pd
-                importance_df = pd.DataFrame(importance_df)
-                importance_df = importance_df.sort_values(by="Importance", ascending=True)
-
-                fig_importance = go.Figure(go.Bar(
-                    x=importance_df["Importance"],
-                    y=importance_df["Feature"],
-                    orientation='h',
-                    marker=dict(color="#00BFFF")
-                ))
-
-                fig_importance.update_layout(
-                    height=400,
-                    margin=dict(l=20, r=20, t=30, b=20),
-                    xaxis_title="Importance Score",
-                    yaxis_title="Feature"
-                )
-
-                st.plotly_chart(fig_importance, use_container_width=True)
-
-            except:
-                st.info("Feature importance not available for this model type.")
-
             # Risk Indicator
             if confidence < 30:
                 st.error("🔴 Risk Level: High")
