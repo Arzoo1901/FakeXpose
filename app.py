@@ -115,9 +115,9 @@ if menu == "Single Profile Analysis":
                     'axis': {'range': [0, 100]},
                     'bar': {'color': "#00BFFF"},
                     'steps': [
-                        {'range': [0, 30], 'color': "#2ECC71"},
+                        {'range': [0, 30], 'color': "#E74C3C"},
                         {'range': [30, 70], 'color': "#F1C40F"},
-                        {'range': [70, 100], 'color': "#E74C3C"}
+                        {'range': [70, 100], 'color': "#2ECC71"}
                     ],
                 }
             ))
