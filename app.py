@@ -132,6 +132,26 @@ elif menu == "Bulk Profile Analysis":
 
         # Convert numeric prediction to readable label
         bulk_data['Prediction'] = bulk_data['Prediction'].map({1: 'FAKE', 0: 'REAL'})
+        # 📊 Summary Metrics
+        total_profiles = len(bulk_data)
+        fake_count = (bulk_data['Prediction'] == 'FAKE').sum()
+        real_count = (bulk_data['Prediction'] == 'REAL').sum()
+
+        fake_percent = (fake_count / total_profiles) * 100
+        real_percent = (real_count / total_profiles) * 100
+
+        st.markdown("## 📈 Bulk Analysis Summary")
+
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.metric("Total Profiles", total_profiles)
+
+        with col2:
+            st.metric("Fake Profiles (%)", f"{fake_percent:.1f}%")
+
+        with col3:
+            st.metric("Real Profiles (%)", f"{real_percent:.1f}%")
 
         st.success("Bulk analysis completed!")
 
