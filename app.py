@@ -78,6 +78,34 @@ if menu == "Single Profile Analysis":
 
             st.progress(int(confidence))
 
+            st.markdown("## 🔎 Risk Analysis")
+
+            risk_flags = []
+
+            if followers < 50:
+                risk_flags.append("Very low follower count")
+
+            if following > followers * 3:
+                risk_flags.append("Following too many accounts compared to followers")
+
+            if posts < 5:
+                risk_flags.append("Very low post activity")
+
+            if has_profile_pic == 0:
+                risk_flags.append("No profile picture")
+
+            ratio = followers / (following + 1)
+
+            if ratio < 0.3:
+                risk_flags.append("Suspicious follower-to-following ratio")
+
+            if risk_flags:
+                st.error("⚠️ Potential Risk Indicators Detected:")
+                for flag in risk_flags:
+                    st.write(f"- {flag}")
+            else:
+                st.success("✅ No major suspicious indicators detected.")
+
             # 🎯 Confidence Gauge
             fig = go.Figure(go.Indicator(
                 mode="gauge+number",
