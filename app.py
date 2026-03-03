@@ -77,7 +77,7 @@ if menu == "Single Profile Analysis":
                 st.metric("Confidence Score", f"{confidence:.2f}%")
 
             st.progress(int(confidence))
-            
+
             # 🎯 Confidence Gauge
             fig = go.Figure(go.Indicator(
                 mode="gauge+number",
@@ -146,17 +146,29 @@ elif menu == "Bulk Profile Analysis":
             key="download_btn"
         )
 
-        import matplotlib.pyplot as plt
+        # 📊 Modern Interactive Donut Chart
+            st.markdown("### 📊 Fake vs Real Distribution")
 
-        st.markdown("### 📊 Fake vs Real Distribution")
+            prediction_counts = bulk_data['Prediction'].value_counts()
 
-        # Count predictions
-        prediction_counts = bulk_data['Prediction'].value_counts()
+            fig = go.Figure(data=[go.Pie(
+                labels=prediction_counts.index,
+                values=prediction_counts.values,
+                hole=0.6,
+                marker=dict(colors=["#E74C3C", "#2ECC71"])
+            )])
 
-        # Create pie chart
-        fig, ax = plt.subplots()
-        ax.pie(prediction_counts, labels=prediction_counts.index, autopct='%1.1f%%')
-        ax.set_title("Fake vs Real Profiles")
+            fig.update_layout(
+                height=400,
+                showlegend=True,
+                legend=dict(
+                    orientation="h",
+                    yanchor="bottom",
+                    y=-0.2,
+                    xanchor="center",
+                    x=0.5
+                ),
+                margin=dict(t=40, b=40, l=40, r=40),
+            )
 
-
-        st.pyplot(fig)
+            st.plotly_chart(fig, use_container_width=True)
