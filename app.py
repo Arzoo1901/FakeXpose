@@ -147,28 +147,28 @@ elif menu == "Bulk Profile Analysis":
         )
 
         # 📊 Modern Interactive Donut Chart
-            st.markdown("### 📊 Fake vs Real Distribution")
+        st.markdown("### 📊 Fake vs Real Distribution")
 
-            prediction_counts = bulk_data['Prediction'].value_counts()
+        prediction_counts = bulk_data['Prediction'].value_counts()
 
-            fig = go.Figure(data=[go.Pie(
-                labels=prediction_counts.index,
-                values=prediction_counts.values,
-                hole=0.6,
-                marker=dict(colors=["#E74C3C", "#2ECC71"])
-            )])
+        fig = go.Figure(data=[go.Pie(
+            labels=prediction_counts.index,
+            values=prediction_counts.values,
+            hole=0.6,
+            marker=dict(colors=["#E74C3C", "#2ECC71"])
+        )])
 
-            fig.update_layout(
-                height=400,
-                showlegend=True,
-                legend=dict(
-                    orientation="h",
-                    yanchor="bottom",
-                    y=-0.2,
-                    xanchor="center",
-                    x=0.5
-                ),
-                margin=dict(t=40, b=40, l=40, r=40),
-            )
+        fig.update_layout(
+            height=400,
+            showlegend=True,
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.2,
+                xanchor="center",
+                x=0.5
+            ),
+            margin=dict(t=40, b=40, l=40, r=40),
+        )
 
-            st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True)
