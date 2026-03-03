@@ -2,6 +2,7 @@ import streamlit as st
 import joblib
 import numpy as np
 import time
+import plotly.graph_objects as go
 
 # Page configuration
 st.set_page_config(
@@ -76,6 +77,24 @@ if menu == "Single Profile Analysis":
                 st.metric("Confidence Score", f"{confidence:.2f}%")
 
             st.progress(int(confidence))
+            
+            # 🎯 Confidence Gauge
+            fig = go.Figure(go.Indicator(
+                mode="gauge+number",
+                value=confidence,
+                title={'text': "Confidence Level"},
+                gauge={
+                    'axis': {'range': [0, 100]},
+                    'bar': {'color': "#00BFFF"},
+                    'steps': [
+                        {'range': [0, 30], 'color': "#2ECC71"},
+                        {'range': [30, 70], 'color': "#F1C40F"},
+                        {'range': [70, 100], 'color': "#E74C3C"}
+                    ],
+                }
+            ))
+
+            st.plotly_chart(fig, use_container_width=True)
 
             # Risk Indicator
             if confidence < 30:
