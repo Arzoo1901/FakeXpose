@@ -11,7 +11,31 @@ st.set_page_config(
     layout="wide"
 )
 
-st.sidebar.title("🕵️ FakeXpose AI")
+st.markdown("""
+# 🛡 FakeXpose  
+### AI-Powered Social Media Fraud Intelligence Dashboard
+""")
+
+st.markdown("---")
+
+st.markdown("## 📊 System Overview")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric("Model Accuracy", "94%")
+
+with col2:
+    st.metric("Fraud Signals Used", "6")
+
+with col3:
+    st.metric("Deployment", "Live ML App")
+
+st.markdown("---")
+
+st.sidebar.markdown("## 🛡 FakeXpose AI")
+st.sidebar.markdown("AI Fraud Detection System")
+st.sidebar.markdown("---")
 
 menu = st.sidebar.radio(
     "Navigation",
@@ -28,7 +52,7 @@ except:
 # User Inputs
 if menu == "Single Profile Analysis":
     
-    st.title("🕵️ Single Profile Analysis")
+    st.markdown("## 🔎 Single Profile Analysis")
     st.divider()
     col1, col2 = st.columns(2)
 
@@ -135,7 +159,7 @@ if menu == "Single Profile Analysis":
 
 elif menu == "Bulk Profile Analysis":
 
-    st.title("📂 Bulk Profile Analysis")
+    st.markdown("## 📂 Bulk Profile Analysis")
     st.divider()
     uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
     if uploaded_file is not None:
@@ -220,3 +244,9 @@ elif menu == "Bulk Profile Analysis":
         )
 
         st.plotly_chart(fig, use_container_width=True)
+
+        st.markdown("---")
+        st.markdown(
+            "<center>Built with ❤️ using Machine Learning & Streamlit | FakeXpose v1.0</center>",
+            unsafe_allow_html=True
+        )
