@@ -99,8 +99,30 @@ if menu == "Single Profile Analysis":
 
             with col2:
                 st.metric("Confidence Score", f"{confidence:.2f}%")
+            
+            if prediction_label == "FAKE":
+                st.error(f"🚨 AI Verdict: This account has a **{confidence:.1f}% probability of being fake.**")
+            else:
+                st.success(f"✅ AI Verdict: This account appears **legitimate with {confidence:.1f}% confidence.**")
 
             st.progress(int(confidence))
+            
+            # ⭐ Profile Trust Score
+            st.markdown("## ⭐ Profile Trust Score")
+
+            trust_score = 100 - confidence
+
+            if trust_score < 30:
+                status = "🚨 Very Suspicious Profile"
+                st.error(f"Trust Score: {trust_score:.1f} / 100")
+            elif trust_score < 60:
+                status = "⚠️ Moderately Suspicious"
+                st.warning(f"Trust Score: {trust_score:.1f} / 100")
+            else:
+                status = "✅ Likely Genuine Profile"
+                st.success(f"Trust Score: {trust_score:.1f} / 100")
+
+            st.write(f"Status: **{status}**")
 
             st.markdown("## 🔎 Risk Analysis")
 
@@ -118,8 +140,6 @@ if menu == "Single Profile Analysis":
             if has_profile_pic == 0:
                 risk_flags.append("No profile picture")
 
-            ratio = followers / (following + 1)
-
             if ratio < 0.3:
                 risk_flags.append("Suspicious follower-to-following ratio")
 
@@ -129,8 +149,23 @@ if menu == "Single Profile Analysis":
                     st.write(f"- {flag}")
             else:
                 st.success("✅ No major suspicious indicators detected.")
+            
+            st.markdown("## 🤖 AI Explanation")
+
+            if prediction[0] == 1:
+                st.warning("This profile is likely **FAKE** based on the following indicators:")
+
+                for flag in risk_flags:
+                    st.write(f"• {flag}")
+
+                if not risk_flags:
+                    st.write("• Suspicious pattern detected by AI model.")
+
+            else:
+                st.success("This profile appears **REAL** based on behavioral signals.")
 
             # 🎯 Confidence Gauge
+            st.markdown("## 🎯 AI Fraud Confidence Meter")
             fig = go.Figure(go.Indicator(
                 mode="gauge+number",
                 value=confidence,
@@ -207,6 +242,17 @@ elif menu == "Bulk Profile Analysis":
 
         st.success("Bulk analysis completed!")
 
+        st.markdown("### 🔎 Top Suspicious Profiles")
+
+        top_fake = bulk_data.sort_values(
+            by="Fake_Probability (%)",
+            ascending=False
+        ).head(10)
+
+        st.dataframe(top_fake)
+
+        st.markdown("### 📋 Full Analysis Results")
+
         st.dataframe(bulk_data)
         csv = bulk_data.to_csv(index=False).encode('utf-8')
 
@@ -244,6 +290,23 @@ elif menu == "Bulk Profile Analysis":
         )
 
         st.plotly_chart(fig, use_container_width=True)
+        st.markdown("### 📊 Fake Probability Distribution")
+
+        import plotly.express as px
+
+        hist_fig = px.histogram(
+            bulk_data,
+            x="Fake_Probability (%)",
+            nbins=20,
+            title="Distribution of Fake Profile Probability"
+        )
+
+        hist_fig.update_layout(
+            height=400,
+            margin=dict(t=40, b=40, l=40, r=40)
+        )
+
+        st.plotly_chart(hist_fig, use_container_width=True)
 
         st.markdown("---")
         st.markdown(
