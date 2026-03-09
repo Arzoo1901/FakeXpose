@@ -2,6 +2,7 @@ import streamlit as st
 import joblib
 import numpy as np
 import time
+import pandas as pd
 import plotly.graph_objects as go
 
 # Page configuration
@@ -11,25 +12,32 @@ st.set_page_config(
     layout="wide"
 )
 
-st.markdown("""
-# 🛡 FakeXpose  
-### AI-Powered Social Media Fraud Intelligence Dashboard
-""")
+st.title("🛡 FakeXpose : AI Fraud Detection Dashboard")
+
+st.caption(
+"Machine Learning system for detecting suspicious social media profiles "
+"based on behavioral signals and profile metadata."
+)
+
+st.divider()
 
 st.markdown("---")
 
-st.markdown("## 📊 System Overview")
+st.subheader("📊 System Overview")
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     st.metric("Model Accuracy", "94%")
 
 with col2:
-    st.metric("Fraud Signals Used", "6")
+    st.metric("Fraud Signals", "6")
 
 with col3:
-    st.metric("Deployment", "Live ML App")
+    st.metric("ML Model", "Random Forest")
+
+with col4:
+    st.metric("Deployment", "Streamlit Cloud")
 
 st.markdown("---")
 
@@ -125,6 +133,31 @@ if menu == "Single Profile Analysis":
             st.write(f"Status: **{status}**")
 
             st.markdown("## 🔎 Risk Analysis")
+
+            import plotly.express as px
+
+            # Example fraud indicators
+            fraud_signals = {
+                "Low Followers": 20,
+                "High Following": 35,
+                "No Profile Picture": 15,
+                "Low Posts": 18,
+                "Suspicious Username": 12
+            }
+
+            signals_df = pd.DataFrame(
+                list(fraud_signals.items()),
+                columns=["Indicator", "Score"]
+            )
+
+            fig = px.bar(
+                signals_df,
+                x="Indicator",
+                y="Score",
+                title="Top Fraud Indicators",
+            )
+
+            st.plotly_chart(fig)
 
             risk_flags = []
 
