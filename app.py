@@ -265,6 +265,14 @@ elif menu == "Bulk Profile Analysis":
         
         bulk_data = pd.read_csv(uploaded_file)
 
+        st.markdown("### 📊 Dataset Insights")
+
+        col1, col2, col3 = st.columns(3)
+
+        col1.metric("Average Followers", int(bulk_data["followers"].mean()))
+        col2.metric("Average Following", int(bulk_data["following"].mean()))
+        col3.metric("Average Posts", int(bulk_data["posts"].mean()))
+
         # Create ratio feature
         bulk_data['followers_following_ratio'] = bulk_data['followers'] / (bulk_data['following'] + 1)
 
@@ -306,6 +314,11 @@ elif menu == "Bulk Profile Analysis":
         st.success("Bulk analysis completed!")
 
         st.markdown("### 🔎 Top Suspicious Profiles")
+
+        top_suspicious = bulk_data.sort_values(
+            by="Fake_Probability (%)",
+            ascending=False
+        ).head(10)
 
         top_fake = bulk_data.sort_values(
             by="Fake_Probability (%)",
@@ -370,6 +383,29 @@ elif menu == "Bulk Profile Analysis":
         )
 
         st.plotly_chart(hist_fig, use_container_width=True)
+
+        st.markdown("### 🔥 Fraud Risk Heatmap")
+
+        import plotly.express as px
+
+        heatmap_fig = px.density_heatmap(
+            bulk_data,
+            x="following",
+            y="followers",
+            z="Fake_Probability (%)",
+            nbinsx=20,
+            nbinsy=20,
+            color_continuous_scale="RdYlGn_r",
+            title="Fraud Probability Heatmap (Followers vs Following)"
+        )
+
+        heatmap_fig.update_layout(
+            height=500,
+            xaxis_title="Following",
+            yaxis_title="Followers"
+        )
+
+        st.plotly_chart(heatmap_fig, use_container_width=True)
 
         st.markdown("---")
         st.markdown(
