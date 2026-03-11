@@ -15,10 +15,15 @@ st.set_page_config(
 
 st.title("🛡 FakeXpose : AI Fraud Detection Dashboard")
 
-st.caption(
-"Machine Learning system for detecting suspicious social media profiles "
-"based on behavioral signals and profile metadata."
-)
+st.markdown("""
+FakeXpose is an **AI-powered fraud detection dashboard** that analyzes
+social media profile metadata and behavioral signals to identify
+potentially fake or bot-controlled accounts.
+
+The system uses a **Random Forest machine learning model** trained on
+profile activity features to estimate fraud probability and highlight
+suspicious behavior patterns.
+""")
 
 st.divider()
 
@@ -70,6 +75,17 @@ Detect suspicious social media accounts based on behavioral signals.
 """
 )
 
+st.sidebar.markdown("### ⚙ How It Works")
+
+st.sidebar.write(
+"""
+1️⃣ User inputs profile data  
+2️⃣ Features are engineered  
+3️⃣ ML model predicts fraud probability  
+4️⃣ Dashboard visualizes risk signals  
+"""
+)
+
 # Load trained model safely
 try:
     @st.cache_resource
@@ -77,6 +93,7 @@ try:
         return joblib.load("fakexpose_model.pkl")
 
     model = load_model()
+    st.success("🟢 AI Model Loaded Successfully")
 except:
     st.error("❌ Model file not found. Please run train.py first.")
     st.stop()
@@ -88,26 +105,40 @@ if menu == "Single Profile Analysis":
     st.divider()
     col1, col2 = st.columns(2)
 
+    if "followers" not in st.session_state:
+        st.session_state.followers = 0
+        st.session_state.following = 0
+        st.session_state.posts = 0
+        st.session_state.username_length = 5
+        st.session_state.has_profile_pic = 1
+
+    if st.button("Load Example Suspicious Profile"):
+        st.session_state.followers = 25
+        st.session_state.following = 850
+        st.session_state.posts = 2
+        st.session_state.username_length = 18
+        st.session_state.has_profile_pic = 0
+
     with col1:
         followers = st.number_input(
             "Number of Followers",
             min_value=0,
             max_value=10000000,
-            help="Typical accounts range from 0 to several million followers"
+            value=st.session_state.followers
         )
 
         posts = st.number_input(
             "Number of Posts",
             min_value=0,
             max_value=100000,
-            help="Fake accounts often have very low post counts"
+            value=st.session_state.posts
         )
 
         username_length = st.number_input(
             "Username Length",
             min_value=1,
             max_value=30,
-            help="Very long usernames may indicate bot accounts"
+            value=st.session_state.username_length
         )
 
     with col2:
@@ -115,13 +146,13 @@ if menu == "Single Profile Analysis":
             "Number of Following",
             min_value=0,
             max_value=10000000,
-            help="Extremely high following counts may indicate suspicious behavior"
+            value=st.session_state.following
         )
 
         has_profile_pic = st.selectbox(
             "Has Profile Picture?",
-            [1, 0],
-            help="Accounts without profile pictures are often suspicious"
+            [1,0],
+            index=0 if st.session_state.has_profile_pic == 1 else 1
         )
 
     if st.button("Analyze Profile", key="analyze_btn"):
@@ -374,8 +405,9 @@ elif menu == "Bulk Profile Analysis":
                                 'followers_following_ratio']]
 
         # Predict
-        bulk_predictions = model.predict(bulk_features)
-        bulk_probabilities = model.predict_proba(bulk_features)
+        with st.spinner("Analyzing profiles using AI model..."):
+            bulk_predictions = model.predict(bulk_features)
+            bulk_probabilities = model.predict_proba(bulk_features)
 
         bulk_data['Prediction'] = bulk_predictions
         bulk_data['Fake_Probability (%)'] = bulk_probabilities[:, 1] * 100
@@ -509,7 +541,13 @@ elif menu == "Bulk Profile Analysis":
         st.markdown("---")
         APP_VERSION = "1.1"
 
-        st.markdown(
-        f"<center>Built with ❤️ using Machine Learning & Streamlit | FakeXpose v{APP_VERSION}</center>",
-        unsafe_allow_html=True
-        )
+        st.markdown("""
+        ---
+        <center>
+
+        **FakeXpose – AI Social Media Fraud Detection System**
+
+        Built using **Python, Machine Learning, Streamlit, and Plotly**
+
+        </center>
+        """, unsafe_allow_html=True)
