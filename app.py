@@ -216,7 +216,7 @@ if menu == "Single Profile Analysis":
             # ⭐ Profile Trust Score
             st.markdown("## ⭐ Profile Trust Score")
 
-            trust_score = 100 - confidence
+            trust_score = 100 - fake_probability
 
             if trust_score < 30:
                 status = "🚨 Very Suspicious Profile"
