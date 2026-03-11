@@ -185,6 +185,36 @@ if menu == "Single Profile Analysis":
             
             st.markdown("## 🤖 AI Explanation")
 
+            st.markdown("## 🧠 Model Feature Importance")
+
+            feature_names = [
+                "Followers",
+                "Following",
+                "Posts",
+                "Profile Picture",
+                "Username Length",
+                "Follower/Following Ratio"
+            ]
+
+            importances = model.feature_importances_
+
+            importance_df = pd.DataFrame({
+                "Feature": feature_names,
+                "Importance": importances
+            }).sort_values(by="Importance", ascending=False)
+
+            import plotly.express as px
+
+            fig = px.bar(
+                importance_df,
+                x="Importance",
+                y="Feature",
+                orientation="h",
+                title="Features Influencing Fake Profile Detection"
+            )
+
+            st.plotly_chart(fig, use_container_width=True)
+
             if prediction[0] == 1:
                 st.warning("This profile is likely **FAKE** based on the following indicators:")
 
