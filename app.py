@@ -4,6 +4,7 @@ import numpy as np
 import time
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.express as px
 
 # Page configuration
 st.set_page_config(
@@ -50,9 +51,32 @@ menu = st.sidebar.radio(
     ["Single Profile Analysis", "Bulk Profile Analysis"]
 )
 
+st.sidebar.markdown("### 🤖 Model Information")
+
+st.sidebar.info(
+"""
+Model: Random Forest Classifier  
+
+Features Used:
+- Followers
+- Following
+- Posts
+- Profile Picture
+- Username Length
+- Followers/Following Ratio
+
+Purpose:
+Detect suspicious social media accounts based on behavioral signals.
+"""
+)
+
 # Load trained model safely
 try:
-    model = joblib.load("fakexpose_model.pkl")
+    @st.cache_resource
+    def load_model():
+        return joblib.load("fakexpose_model.pkl")
+
+    model = load_model()
 except:
     st.error("❌ Model file not found. Please run train.py first.")
     st.stop()
@@ -65,14 +89,40 @@ if menu == "Single Profile Analysis":
     col1, col2 = st.columns(2)
 
     with col1:
-        followers = st.number_input("Number of Followers", min_value=0)
-        posts = st.number_input("Number of Posts", min_value=0)
-        username_length = st.number_input("Username Length", min_value=1)
+        followers = st.number_input(
+            "Number of Followers",
+            min_value=0,
+            max_value=10000000,
+            help="Typical accounts range from 0 to several million followers"
+        )
+
+        posts = st.number_input(
+            "Number of Posts",
+            min_value=0,
+            max_value=100000,
+            help="Fake accounts often have very low post counts"
+        )
+
+        username_length = st.number_input(
+            "Username Length",
+            min_value=1,
+            max_value=30,
+            help="Very long usernames may indicate bot accounts"
+        )
 
     with col2:
-        following = st.number_input("Number of Following", min_value=0)
-        has_profile_pic = st.selectbox("Has Profile Picture?", [1, 0])
-    st.markdown("---")
+        following = st.number_input(
+            "Number of Following",
+            min_value=0,
+            max_value=10000000,
+            help="Extremely high following counts may indicate suspicious behavior"
+        )
+
+        has_profile_pic = st.selectbox(
+            "Has Profile Picture?",
+            [1, 0],
+            help="Accounts without profile pictures are often suspicious"
+        )
 
     if st.button("Analyze Profile", key="analyze_btn"):
 
@@ -107,6 +157,23 @@ if menu == "Single Profile Analysis":
 
             with col2:
                 st.metric("Confidence Score", f"{confidence:.2f}%")
+
+            st.markdown("### 📊 Probability Breakdown")
+
+            prob_df = pd.DataFrame({
+                "Class": ["Real", "Fake"],
+                "Probability": [real_probability, fake_probability]
+            })
+
+            fig = px.bar(
+                prob_df,
+                x="Class",
+                y="Probability",
+                color="Class",
+                title="Prediction Probability"
+            )
+
+            st.plotly_chart(fig, use_container_width=True)
             
             if prediction_label == "FAKE":
                 st.error(f"🚨 AI Verdict: This account has a **{confidence:.1f}% probability of being fake.**")
@@ -133,8 +200,6 @@ if menu == "Single Profile Analysis":
             st.write(f"Status: **{status}**")
 
             st.markdown("## 🔎 Risk Analysis")
-
-            import plotly.express as px
 
             # Example fraud indicators
             fraud_signals = {
@@ -203,8 +268,6 @@ if menu == "Single Profile Analysis":
                 "Importance": importances
             }).sort_values(by="Importance", ascending=False)
 
-            import plotly.express as px
-
             fig = px.bar(
                 importance_df,
                 x="Importance",
@@ -265,6 +328,18 @@ elif menu == "Bulk Profile Analysis":
         
         bulk_data = pd.read_csv(uploaded_file)
 
+        required_columns = [
+            "followers",
+            "following",
+            "posts",
+            "has_profile_pic",
+            "username_length"
+        ]
+
+        if not all(col in bulk_data.columns for col in required_columns):
+            st.error("CSV must contain required columns.")
+            st.stop()
+
         st.markdown("### 📊 Dataset Insights")
 
         col1, col2, col3 = st.columns(3)
@@ -272,6 +347,23 @@ elif menu == "Bulk Profile Analysis":
         col1.metric("Average Followers", int(bulk_data["followers"].mean()))
         col2.metric("Average Following", int(bulk_data["following"].mean()))
         col3.metric("Average Posts", int(bulk_data["posts"].mean()))
+
+        st.markdown("### 🔬 Feature Correlation Analysis")
+
+        corr = bulk_data[[
+            "followers",
+            "following",
+            "posts",
+            "username_length"
+        ]].corr()
+
+        fig = px.imshow(
+            corr,
+            text_auto=True,
+            title="Feature Correlation Matrix"
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
 
         # Create ratio feature
         bulk_data['followers_following_ratio'] = bulk_data['followers'] / (bulk_data['following'] + 1)
@@ -287,6 +379,22 @@ elif menu == "Bulk Profile Analysis":
 
         bulk_data['Prediction'] = bulk_predictions
         bulk_data['Fake_Probability (%)'] = bulk_probabilities[:, 1] * 100
+
+        def classify_risk(prob):
+            if prob > 80:
+                return "High Risk"
+            elif prob > 50:
+                return "Medium Risk"
+            else:
+                return "Low Risk"
+
+        bulk_data["Risk_Level"] = bulk_data["Fake_Probability (%)"].apply(classify_risk)
+
+        st.markdown("### 🚨 High Risk Accounts")
+
+        high_risk = bulk_data[bulk_data["Risk_Level"] == "High Risk"]
+
+        st.dataframe(high_risk.head(10))
 
         # Convert numeric prediction to readable label
         bulk_data['Prediction'] = bulk_data['Prediction'].map({1: 'FAKE', 0: 'REAL'})
@@ -314,11 +422,6 @@ elif menu == "Bulk Profile Analysis":
         st.success("Bulk analysis completed!")
 
         st.markdown("### 🔎 Top Suspicious Profiles")
-
-        top_suspicious = bulk_data.sort_values(
-            by="Fake_Probability (%)",
-            ascending=False
-        ).head(10)
 
         top_fake = bulk_data.sort_values(
             by="Fake_Probability (%)",
@@ -368,8 +471,6 @@ elif menu == "Bulk Profile Analysis":
         st.plotly_chart(fig, use_container_width=True)
         st.markdown("### 📊 Fake Probability Distribution")
 
-        import plotly.express as px
-
         hist_fig = px.histogram(
             bulk_data,
             x="Fake_Probability (%)",
@@ -385,8 +486,6 @@ elif menu == "Bulk Profile Analysis":
         st.plotly_chart(hist_fig, use_container_width=True)
 
         st.markdown("### 🔥 Fraud Risk Heatmap")
-
-        import plotly.express as px
 
         heatmap_fig = px.density_heatmap(
             bulk_data,
@@ -408,7 +507,9 @@ elif menu == "Bulk Profile Analysis":
         st.plotly_chart(heatmap_fig, use_container_width=True)
 
         st.markdown("---")
+        APP_VERSION = "1.1"
+
         st.markdown(
-            "<center>Built with ❤️ using Machine Learning & Streamlit | FakeXpose v1.0</center>",
-            unsafe_allow_html=True
+        f"<center>Built with ❤️ using Machine Learning & Streamlit | FakeXpose v{APP_VERSION}</center>",
+        unsafe_allow_html=True
         )
