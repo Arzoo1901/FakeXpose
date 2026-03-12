@@ -3,108 +3,184 @@
 [![Python](https://img.shields.io/badge/Python-3.11-blue)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-App-green)](https://streamlit.io/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
----
 
-## AI-Powered Social Media Profile Fraud Detection System
+------------------------------------------------------------------------
 
-**FakeXpose** is a machine learning web application built with **Python** and **Streamlit** that detects whether a social media profile is **fake** or **real** based on behavioral metrics and engagement patterns. It is designed for researchers, developers, and cybersecurity enthusiasts to analyze suspicious accounts efficiently.
+# 🛡 FakeXpose -- AI Social Media Fraud Detection System
 
----
+FakeXpose is an **AI-powered social media fraud detection dashboard**
+that analyzes profile metadata and behavioral patterns to identify
+**fake or bot-controlled accounts**.
 
-## 🚀 Features
+The system uses a **Random Forest Machine Learning model** trained on
+profile activity features to estimate the probability that an account is
+fraudulent.
 
-* 🔍 **Single Profile Analysis** – Check individual profiles for authenticity.
-* 📊 **Bulk CSV Upload Analysis** – Analyze multiple profiles at once.
-* 📈 **Fake vs Real Distribution Chart** – Visualize the ratio of fake vs real profiles.
-* 📥 **Downloadable Prediction Results** – Export results in CSV format.
-* 🎯 **Confidence Score & Risk Level** – See how confident the model is about predictions.
-* 🧠 **Intelligent ML Model** – Uses six key behavioral features for detection.
+The project provides both **single profile investigation** and **bulk
+dataset analysis** with interactive visualizations and risk indicators.
 
----
+------------------------------------------------------------------------
 
-## 🧠 Machine Learning Features Used
+# 🚀 Key Features
 
-1. **Followers** – Total number of followers.
-2. **Following** – Number of accounts the user follows.
-3. **Posts** – Total number of posts.
-4. **Has Profile Picture** – Boolean indicating if the account has a profile picture.
-5. **Username Length** – Length of the username.
-6. **Followers/Following Ratio** – Engagement indicator.
+### 🔍 Single Profile Analysis
 
----
+Analyze an individual social media profile and detect whether it is
+**Fake or Real** using AI.
 
-## 🛠 Tech Stack
+### 📂 Bulk Profile Analysis
 
-* **Python** – Core programming language.
-* **Scikit-learn** – For building the ML model.
-* **Pandas & NumPy** – Data manipulation and numerical operations.
-* **Matplotlib** – Data visualization.
-* **Streamlit** – Web app interface.
+Upload a CSV dataset and analyze **multiple profiles automatically**.
 
----
+### 📊 Interactive Visualizations
 
-## ▶️ How to Run Locally
+-   Fake vs Real distribution
+-   Fraud probability histogram
+-   Fraud risk heatmap
+-   Feature correlation matrix
 
-1. **Clone the repository:**
+### 🎯 AI Confidence Meter
 
-```bash
-git clone https://github.com/<your-username>/FakeXpose.git
+Gauge visualization showing the model's **confidence in prediction**.
+
+### ⭐ Profile Trust Score
+
+A calculated trust score based on fraud probability.
+
+### 🚨 Risk Indicator Detection
+
+Flags suspicious signals such as: - Very low followers - Excessive
+following - Low activity - Missing profile picture - Suspicious
+follower/following ratio
+
+### 📥 Downloadable Results
+
+Export analyzed profiles as a **CSV report**.
+
+### 🧠 Model Explainability
+
+Displays **feature importance** to explain which signals influenced the
+AI decision.
+
+------------------------------------------------------------------------
+
+# 🧠 Machine Learning Model
+
+FakeXpose uses a **Random Forest Classifier** trained on behavioral
+signals extracted from social media profile metadata.
+
+### Features used by the model
+
+1.  Followers\
+2.  Following\
+3.  Posts\
+4.  Has Profile Picture\
+5.  Username Length\
+6.  Followers / Following Ratio
+
+These features help detect **bot-like behavior patterns** often found in
+fake accounts.
+
+------------------------------------------------------------------------
+
+# 📊 Dashboard Capabilities
+
+The AI dashboard provides:
+
+• Prediction probability visualization\
+• Fraud confidence meter\
+• Trust score calculation\
+• Fraud indicator analysis\
+• Feature importance explanation\
+• Dataset correlation analysis\
+• Fraud probability distribution\
+• Risk level classification
+
+------------------------------------------------------------------------
+
+# 🛠 Tech Stack
+
+  Technology     Purpose
+  -------------- ----------------------------
+  Python         Core programming language
+  Scikit-learn   Machine learning model
+  Streamlit      Interactive web dashboard
+  Pandas         Data processing
+  NumPy          Numerical computation
+  Plotly         Interactive visualizations
+  Joblib         Model serialization
+
+------------------------------------------------------------------------
+
+# 📂 Project Structure
+
+FakeXpose\
+│\
+├── app.py \# Main Streamlit dashboard\
+├── fakexpose_model.pkl \# Trained ML model\
+├── train.py \# Model training script\
+├── requirements.txt \# Project dependencies\
+├── README.md \# Project documentation\
+└── LICENSE \# MIT License
+
+------------------------------------------------------------------------
+
+# ▶️ Running the Project Locally
+
+### 1️⃣ Clone the repository
+
+git clone https://github.com/`<your-username>`{=html}/FakeXpose.git\
 cd FakeXpose
-```
 
-2. **Install dependencies:**
+### 2️⃣ Install dependencies
 
-```bash
 pip install -r requirements.txt
-```
 
-3. **Run the Streamlit app:**
+### 3️⃣ Run the Streamlit application
 
-```bash
 streamlit run app.py
-```
 
----
+The dashboard will open in your browser.
 
-## 📂 CSV Format for Bulk Upload
+------------------------------------------------------------------------
 
-Your CSV file should contain the following columns:
+# 📂 CSV Format for Bulk Analysis
 
-```csv
+Your CSV file must contain the following columns:
+
 followers,following,posts,has_profile_pic,username_length
-```
 
-**Example:**
+### Example
 
-```csv
-1200,150,50,1,8
-350,500,20,0,12
-```
+1200,150,50,1,8\
+350,500,20,0,12\
+25,800,2,0,18
 
----
+------------------------------------------------------------------------
 
-## 🌍 Live Demo
+# 🌍 Live Demo
 
-[https://fakexpose-nurp6bbxn7dc6mdwbxzzmh.streamlit.app/]
+https://fakexpose-nurp6bbxn7dc6mdwbxzzmh.streamlit.app/
 
----
+------------------------------------------------------------------------
 
-## 👨‍💻 Authors
+# 👨‍💻 Authors
 
-* **Arzoo**
-* **Abhinav Vashisth**
-* **Abhinav Katoch**
+Arzoo\
+Abhinav Vashisth\
+Abhinav Katoch
 
----
+------------------------------------------------------------------------
 
-## 📄 License
+# 📄 License
 
-This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License**.\
+See the LICENSE file for details.
 
----
+------------------------------------------------------------------------
 
-## 💡 Tips for Users
+# ⚠ Disclaimer
 
-* Ensure your CSV file has no empty cells.
-* The `has_profile_pic` column should be `1` (Yes) or `0` (No).
-* Username length is calculated without special characters or spaces.
+This project is intended for **educational and research purposes**.\
+Predictions generated by the model should not be considered definitive
+proof of fraud.
