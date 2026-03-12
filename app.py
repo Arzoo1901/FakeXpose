@@ -325,7 +325,7 @@ if menu == "Single Profile Analysis":
             st.markdown("## 🎯 AI Fraud Confidence Meter")
             fig = go.Figure(go.Indicator(
                 mode="gauge+number",
-                value=confidence,
+                value=real_probability,
                 title={'text': "Confidence Level"},
                 gauge={
                     'axis': {'range': [0, 100]},
@@ -341,9 +341,9 @@ if menu == "Single Profile Analysis":
             st.plotly_chart(fig, use_container_width=True)
 
             # Risk Indicator
-            if confidence < 30:
+            if real_probability < 30:
                 st.error("🔴 Risk Level: High")
-            elif confidence < 70:
+            elif real_probability < 70:
                 st.warning("🟡 Risk Level: Medium")
             else:
                 st.info("🟢 Risk Level: Low")  
