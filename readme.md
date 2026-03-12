@@ -129,7 +129,7 @@ FakeXpose\
 
 ### 1️⃣ Clone the repository
 
-git clone https://github.com/`<your-username>`{=html}/FakeXpose.git\
+git clone https://github.com/<Arzoo1901>/FakeXpose.git
 cd FakeXpose
 
 ### 2️⃣ Install dependencies
