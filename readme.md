@@ -100,7 +100,7 @@ The AI dashboard provides:
 
 # Tech Stack
 
-  Technology     Purpose
+  Technology     -Purpose
   -------------- ----------------------------
   Python         -Core programming language\
   Scikit-learn   -Machine learning model\
