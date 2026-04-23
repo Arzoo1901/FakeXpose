@@ -102,13 +102,13 @@ The AI dashboard provides:
 
   Technology     Purpose
   -------------- ----------------------------
-  Python         Core programming language
-  Scikit-learn   Machine learning model
-  Streamlit      Interactive web dashboard
-  Pandas         Data processing
-  NumPy          Numerical computation
-  Plotly         Interactive visualizations
-  Joblib         Model serialization
+  Python         Core programming language\
+  Scikit-learn   Machine learning model\
+  Streamlit      Interactive web dashboard\
+  Pandas         Data processing\
+  NumPy          Numerical computation\
+  Plotly         Interactive visualizations\
+  Joblib         Model serialization\
 
 ------------------------------------------------------------------------
 
